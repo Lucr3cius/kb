@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {%for message in get_flashed_messages()%}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+    <h2>Script was generated with following config:</h2>
+    </br>
+        
+        <label>Generate I_Script: {{ i_script }}</label>
+        </br>
+
+        <label>Generate h_Script: {{ h_script }}</label>
+        </br>
+
+        <label>Add Historization: {{historization}}</label>
+        </br>
+        
+
+        <h3>Attributes:</h3>
+        {% for atr in attributes %}
+            <label>{{atr}}</label>
+            </br>
+        {% endfor %}
+    </br>
+    <form action="{{url_for('script_result')}}" method="POST">
+        
+        
+    <button type="submit" class="btn btn-primary">Save Scripts</button>
+    </form>
+    
+{% endblock %}

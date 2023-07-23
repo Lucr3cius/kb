@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h3>Attributes:</h3>
+    <form method="POST">
+        {{ attributes.csrf_token}}
+        {% for atr in attributes %}
+            <input type="checkbox" name="test" value="{{atr}}">
+            <label>{{atr}}</label>
+        {% endfor %}
+    <input type="submit">
+    </form>
+    
+{% endblock %}

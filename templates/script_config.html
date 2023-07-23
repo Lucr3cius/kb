@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Config:</h2>
+    <form action="{{url_for('script_config')}}" method="POST">
+        
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="i_scriptid" name="i_script" value=True checked>
+            <label class="form-check-label" for="i_scriptid">Generate I_Script</label>
+        </div>
+          
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="h_scriptid" name="h_script" value=True checked>
+            <label class="form-check-label" for="h_scriptid">Generate H_Script</label>
+        </div>
+
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="historizationid" name="historization" value=True checked>
+            <label class="form-check-label" for="historizationid">Add Historization</label>
+        </div>
+
+        
+        {{ attributes.csrf_token}}
+        <h3>Attributes:</h3>
+        {% for atr in attributes %}
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="{{atr}}" id="flexCheckChecked" name="attributes" checked>
+                <label class="form-check-label" for="flexCheckChecked">{{atr}}</label>
+            </div>    
+        {% endfor %}
+    </br>
+    <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    
+{% endblock %}
