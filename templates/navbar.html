@@ -1,24 +1,21 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="{{ url_for('index') }}">Prototype</a>
+      <a class="navbar-brand" href="{{ url_for('index') }}">
+        <img src="/static/image/logo_t4.png" alt="Logo" width="36" height="36" class="d-inline-block align-text-top">
+        Script App
+      </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Script</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('user', name='Nik') }}">Link</a>
-          </li>
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 fs-5">
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Dropdown
+              Script
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="#">Action</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('script_config') }}">Config</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('script_result') }}">Result</a></li>
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" href="#">Something else here</a></li>
             </ul>
@@ -27,6 +24,14 @@
             <a class="nav-link disabled">Testing</a>
           </li>
         </ul>
+        {% if model_code != '': %}
+        <!--if block html code-->
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 fs-5">
+            <li class="nav-item">
+            <a class="nav-link">{{model_code}}.{{table_name}}</a>
+            </li>
+        </ul>
+        {% endif %}
       </div>
     </div>
   </nav>

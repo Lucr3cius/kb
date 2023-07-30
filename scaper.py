@@ -140,3 +140,33 @@ def main():
 
 
 main()
+
+# %%
+import random
+
+def get_random_unique_sample(numbers_list, sample_size):
+    # Count the occurrences of each number
+    counts = {}
+    for number in numbers_list:
+        counts[number] = counts.get(number, 0) + 1
+
+    # Create a list of numbers and their frequencies
+    numbers_with_frequencies = [(number, frequency) for number, frequency in counts.items()]
+
+    # Sort the list based on frequency in descending order
+    numbers_with_frequencies.sort(key=lambda x: x[1], reverse=True)
+
+    # Extract the numbers from the sorted list
+    numbers = [number for number, _ in numbers_with_frequencies]
+
+    # Use random.choices to get a random sample of unique numbers
+    sample = random.sample(numbers, k=min(sample_size, len(numbers)))
+
+    return sample
+
+# Example usage
+numbers = [1, 2, 4, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]
+sample_size = 2
+
+random_sample = get_random_unique_sample(numbers, sample_size)
+print(random_sample)

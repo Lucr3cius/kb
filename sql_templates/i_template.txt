@@ -1,0 +1,92 @@
+/********1*********2*********3*********4*********5*********6*********7*********8*********9*********/
+/* Name: %scriptname%.txt                                                                         */
+/* Comment: Plneni tabulky %database%.%table_name%                                                */
+/* Description: Plneni a historizace tabulky %database%.%table_name%                              */
+/* Run when: Spousti se %denne% v ramci H-faze transformace oblasti %oblast%                      */
+/* Repeatable: %repeat%                                                                           */
+/**************************************************************************************************/
+/* Changes:                                                                                       */
+/* %usname% * %change_date% * First Written (MULTI-XXXX)                                          */
+/**************************************************************************************************/
+.SET SESSION CHARSET 'utf8'
+
+.LOGON '@logon_%logon%'
+
+database %database%;
+
+/*************** MD_SCRIPT_TIMES.SCRIPT_START ***********************/
+exec o_dwh.DWH_Script_Instance_Ins('%scriptname%');
+
+/*************** HISTORIZATION OF TARGET TABLE - START **************/
+/* Ending records, which don't come - DELETE */
+update ht1 from %database%.%h_table_name% ht1
+set End_Date = o_dw_date.V_DW_MPS_Date.DW_MPS_Date - 1
+where (%pk_names_list%) not in
+ (
+ select
+  %pk_names_list%
+ from %aux_database%.%table_name%
+ )
+ and ht1.End_Date = date '2999-12-31'
+;
+
+collect statistics on %database%.%h_table_name%;
+
+/* Ending records with change - UPDATE */
+update ht1 from
+ %database%.%h_table_name% ht1
+ %aux_database%.%table_name% at1
+set End_Date = o_dw_date.V_DW_MPS_Date.DW_MPS_Date - 1
+where ht1.End_Date = date '2999-12-31'
+ %pk_names_list_where%
+ and
+ (
+ %historization_where%
+ )
+;
+
+collect statistics on %database%.%h_table_name%;
+
+/* Inserting new and changed - INSERT */
+insert into %database%.%h_table_name%
+(
+ %pk_names_list%,
+ Start_Date,
+ End_Date,
+ %atr_names_list%
+)
+select
+ %at1_pk_names_list%,
+ o_dw_date.V_DW_MPS_Date.DW_MPS_Date as Start_Date,
+ date '2999-12-31' as End_Date,
+ %at1_atr_names_list%
+from %aux_database%.%table_name% at1
+ letf join %database%.%h_table_name% ht1 on ht1.End_Date = date '2999-12-31'
+  and %pk_names_list_where%
+ where ht1.Start_Date is null
+;
+
+collect statistics on %database%.%h_table_name%;
+
+/*************** HISTORIZATION OF TARGET TABLE - END ****************/
+delete from %database%.%table_name% all;
+
+insert into %database%.%table_name%
+(
+ %pk_names_list%,
+ %atr_names_list%
+)
+select
+	%at1_pk_names_list%,
+	%at1_atr_names_list%
+from %aux_database%.%table_name% at1
+;
+
+collect statistics on %database%.%table_name%;
+
+/*************** Filling OF TARGET TABLE - END **********************/
+
+/*************** MD_SCRIPT_TIMES.SCRIPT_END *************************/
+exec o_dwh.DWH_Script_Instance_Upd('%scriptname%');
+
+.QUIT 0
